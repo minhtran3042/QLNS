@@ -1,0 +1,280 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.Vector;
+
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+public class In4staff extends JFrame {
+
+	private  JPanel contentPane;
+	private static JTextField txtTenNV;
+	private static JTextField txtTenPB;
+	private static JTextField txtDA;
+	private static JTextField txtLCB;
+	private static JTextField txtNLV;
+	private static JTextField txtThuong;
+	private static JTextField txtPhat;
+	private static JTextField txtTL;
+	private static JTable table;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					In4staff frame = new In4staff();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		LoadData();
+	}
+	static DefaultTableModel tbn = new DefaultTableModel();
+	public static JTextField txtUsename;
+	
+	public static void LoadData() {
+		txtUsename.setText(Login.txtUsename.getText());
+		try {
+			String usename = txtUsename.getText();
+			System.out.println(usename);
+			Connect com = new Connect();
+			//System.out.println(Login.txtUsename.getText());
+			Connection conn = com.getConnection();
+			int number;
+			Vector row,column;
+			row = new Vector(); // khoi tạo row và column
+			column = new Vector();
+			
+			//PreparedStatement ps2 = conn.prepareStatement("select nv.TenNV, pb.TenPB,pb.DuAn, sl.luongcb, sl.ngaylv,sl.thuong, sl.phat , sl.tongluong from((NhanVien nv join QLPB pb on nv.MaPB = pb.MaPB)join salary sl on nv.MaNV = sl.MaNV) join login lg on lg.MaNV  = nv.MaNV where lg.MaNV = (select MaNV from login where usename = '"+Login.txtUsename.getText()+"')");
+			PreparedStatement ps2 = conn.prepareStatement("select nv.TenNV, pb.TenPB,pb.DuAn, sl.luongcb, sl.ngaylv,sl.thuong, sl.phat , sl.tongluong from((NhanVien nv join QLPB pb on nv.MaPB = pb.MaPB)join salary sl on nv.MaNV = sl.MaNV) join login lg on lg.MaNV  = nv.MaNV where lg.usename = ?");
+			ps2.setString(1,usename);
+			ResultSet rs2 = ps2.executeQuery();
+			ResultSetMetaData metadata = rs2.getMetaData();
+			number = metadata.getColumnCount();
+			for(int i = 1;i <= number;i++) {// vong lap lay tat ca cac cot cua bang
+				column.add(metadata.getColumnName(i));//lay ra tieu de cua cac cot
+			}
+			
+			tbn.setColumnIdentifiers(column);
+			
+			JOptionPane pane = new JOptionPane();
+			pane.setSize(1000, 1000);;
+			
+			while(rs2.next()) {
+				
+				/*String name = JOptionPane.showInputDialog("name");
+				String age = JOptionPane.showInputDialog("age");
+				String address = JOptionPane.showInputDialog("Address");
+				String contact = JOptionPane.showInputDialog("Contact Number");*/
+
+				String lineSep = System.lineSeparator();
+				StringBuilder result = new StringBuilder();
+				result.append("\t\tUser information is: ").append(lineSep).append(lineSep);
+				result.append("Name: ").append(rs2.getString(1)).append(lineSep);
+				result.append("Age: ").append(rs2.getString(2)).append(lineSep);
+				result.append("Address: ").append(rs2.getString(3)).append(lineSep);
+				result.append("Contact Number: ").append(rs2.getString(4));
+
+				JOptionPane.showMessageDialog(null, result.toString(), "Information Staff", JOptionPane.INFORMATION_MESSAGE );
+				
+				/*final JPanel panel = new JPanel();
+				
+				JOptionPane.showMessageDialog(panel, "Download completed", "Question",
+				        JOptionPane.INFORMATION_MESSAGE);*/
+				row = new Vector();
+				for(int i = 1;i<=number;i++) {
+					row.addElement(rs2.getString(i));//them vao hang du lieu tu vi tri i
+				}
+				tbn.addRow(row);//them cac gia tri vua lay vao hang 
+				table.setModel(tbn); //gan gia tri của model vao bang
+				System.out.println(rs2.getString(1));
+				System.out.println(rs2.getString(2));
+				System.out.println(rs2.getString(3));
+				System.out.println(rs2.getString(4));
+				txtTenNV.setText(rs2.getString(1));
+				txtTenPB.setText(rs2.getString(2));
+				txtDA.setText(rs2.getString(3));
+				txtLCB.setText(rs2.getString(4));
+				txtNLV.setText(rs2.getString(5));
+				txtThuong.setText(rs2.getString(6));
+				txtPhat.setText(rs2.getString(7));
+				txtTL.setText(rs2.getString(8));
+			}
+			//String get = Login.txtUsename.getText();
+			//String getMaNV = "select MaNV from login where usename = \'"+get+"\'";
+			//System.out.println(getMaNV);
+			/*while(rs2.next()) {
+			//String sql = ;
+				System.out.println(rs2.getString(1));
+				PreparedStatement ps = conn.prepareStatement("select nv.TenNV, pb.TenPB,pb.DuAn, sl.luongcb, sl.ngaylv,sl.thuong, sl.phat , sl.tongluong from((NhanVien nv join QLPB pb on nv.MaPB = pb.MaPB)join salary sl on nv.MaNV = sl.MaNV) join login lg on lg.MaNV  = nv.MaNV where lg.MaNV = ?");
+				//ps.setString(1, rs2.getString(1));
+				//System.out.println(rs2.getString(1));
+				ps.setString(1, rs2.getString(1));
+				ResultSet rs = ps.executeQuery();
+				ResultSetMetaData metadata = rs.getMetaData();
+				number = metadata.getColumnCount();
+				for(int i = 1;i <= number;i++) {// vong lap lay tat ca cac cot cua bang
+					column.add(metadata.getColumnName(i));//lay ra tieu de cua cac cot
+				}
+				tbn.setColumnIdentifiers(column);
+				while(rs.next()) {
+					row = new Vector();
+					for(int i = 1;i<=number;i++) {
+						row.addElement(rs.getString(i));//them vao hang du lieu tu vi tri i
+					}
+					txtTenNV.setText("sfdfs");
+					tbn.addRow(row);//them cac gia tri vua lay vao hang 
+					table.setModel(tbn); //gan gia tri của model vao bang
+					System.out.println(rs.getString(1));
+					System.out.println(rs.getString(2));
+					System.out.println(rs.getString(3));
+					System.out.println(rs.getString(4));
+					
+					txtTenNV.setText("test");
+					txtTenPB.setText(rs.getString(2));
+					txtDA.setText(rs.getString(3));
+					txtLCB.setText(rs.getString(4));
+					txtNLV.setText(rs.getString(5));
+					txtThuong.setText(rs.getString(6));
+					txtPhat.setText(rs.getString(7));
+					txtTL.setText(rs.getString(8));			
+				}
+			}*/
+			
+		}
+		catch(Exception ex) {
+			System.out.println(ex.toString());
+		}
+	}
+	/**
+	 * Create the frame.
+	 */
+	
+	public In4staff() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 714, 719);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Ten Nhan Vien");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setBounds(56, 58, 128, 42);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblTenPhongBan = new JLabel("Ten Phong Ban");
+		lblTenPhongBan.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblTenPhongBan.setBounds(56, 110, 128, 42);
+		contentPane.add(lblTenPhongBan);
+		
+		JLabel lblDuAn = new JLabel("Du An");
+		lblDuAn.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblDuAn.setBounds(56, 162, 128, 42);
+		contentPane.add(lblDuAn);
+		
+		JLabel lblLuongCoBan = new JLabel("Luong Co Ban");
+		lblLuongCoBan.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblLuongCoBan.setBounds(56, 214, 128, 42);
+		contentPane.add(lblLuongCoBan);
+		
+		JLabel lblNgayLamViec = new JLabel("Ngay Lam Viec ");
+		lblNgayLamViec.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNgayLamViec.setBounds(56, 266, 128, 42);
+		contentPane.add(lblNgayLamViec);
+		
+		JLabel lblThuong = new JLabel("Thuong ");
+		lblThuong.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblThuong.setBounds(56, 318, 128, 42);
+		contentPane.add(lblThuong);
+		
+		JLabel lblPhat = new JLabel("Phat ");
+		lblPhat.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPhat.setBounds(56, 370, 128, 42);
+		contentPane.add(lblPhat);
+		
+		JLabel lblTongLuong = new JLabel("Tong Luong");
+		lblTongLuong.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblTongLuong.setBounds(56, 422, 128, 42);
+		contentPane.add(lblTongLuong);
+		
+		txtTenNV = new JTextField();
+		txtTenNV.setBounds(194, 58, 450, 42);
+		contentPane.add(txtTenNV);
+		txtTenNV.setColumns(10);
+		
+		txtTenPB = new JTextField();
+		txtTenPB.setColumns(10);
+		txtTenPB.setBounds(194, 110, 450, 42);
+		contentPane.add(txtTenPB);
+		
+		txtDA = new JTextField();
+		txtDA.setColumns(10);
+		txtDA.setBounds(194, 162, 450, 42);
+		contentPane.add(txtDA);
+		
+		txtLCB = new JTextField();
+		txtLCB.setColumns(10);
+		txtLCB.setBounds(194, 214, 450, 42);
+		contentPane.add(txtLCB);
+		
+		txtNLV = new JTextField();
+		txtNLV.setColumns(10);
+		txtNLV.setBounds(194, 266, 450, 42);
+		contentPane.add(txtNLV);
+		
+		txtThuong = new JTextField();
+		txtThuong.setColumns(10);
+		txtThuong.setBounds(194, 318, 450, 42);
+		contentPane.add(txtThuong);
+		
+		txtPhat = new JTextField();
+		txtPhat.setColumns(10);
+		txtPhat.setBounds(194, 370, 450, 42);
+		contentPane.add(txtPhat);
+		
+		txtTL = new JTextField();
+		txtTL.setColumns(10);
+		txtTL.setBounds(194, 422, 450, 42);
+		contentPane.add(txtTL);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 496, 680, 176);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"TenNV", "TenPB", "DuAn", "LuongCoBan", "NgayLamViec", "Thuong", "Phat", "TongLuong"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		txtUsename = new JTextField();
+		txtUsename.setBounds(35, 10, 121, 19);
+		contentPane.add(txtUsename);
+		txtUsename.setColumns(10);
+	}
+}

@@ -1,0 +1,208 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class ViewNV extends JFrame {
+
+	private JPanel contentPane;
+	private static JTextField txtTenNV;
+	private static JTextField txtPB;
+	private static JTextField txtDA;
+	private static JTextField txtLCB;
+	private static JTextField txtSNL;
+	private static JTextField txtT;
+	private static JTextField txtP;
+	private static JTextField txtTL;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ViewNV frame = new ViewNV();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		LoadData();	
+	}
+	
+	public static void LoadData() {
+		try {
+			Connect com = new Connect();
+			//System.out.println(Login.txtUsename.getText());
+			Connection conn = com.getConnection();
+			PreparedStatement ps2 = conn.prepareStatement("select MaNV from login where usename = '"+Login.txtUsename.getText()+"'");
+			ResultSet rs2 = ps2.executeQuery();
+			//String get = Login.txtUsename.getText();
+			//String getMaNV = "select MaNV from login where usename = \'"+get+"\'";
+			//System.out.println(getMaNV);
+			while(rs2.next()) {
+			//String sql = ;
+				PreparedStatement ps = conn.prepareStatement("select nv.TenNV, pb.TenPB,pb.DuAn, sl.luongcb, sl.ngaylv,sl.thuong, sl.phat , sl.tongluong from((NhanVien nv join QLPB pb on nv.MaPB = pb.MaPB)join salary sl on nv.MaNV = sl.MaNV) join login lg on lg.MaNV  = nv.MaNV where lg.MaNV = ?");
+				//ps.setString(1, rs2.getString(1));
+				//System.out.println(rs2.getString(1));
+				ps.setString(1, rs2.getString(1));
+				ResultSet rs = ps.executeQuery();
+				while(rs.next()) {
+					System.out.println(rs.getString(1));
+					System.out.println(rs.getString(2));
+					System.out.println(rs.getString(3));
+					System.out.println(rs.getString(4));
+					txtTenNV.setText("test");
+					txtPB.setText(rs.getString(2));
+					txtDA.setText(rs.getString(3));
+					txtLCB.setText(rs.getString(4));
+					txtSNL.setText(rs.getString(5));
+					txtT.setText(rs.getString(6));
+					txtP.setText(rs.getString(7));
+					txtTL.setText(rs.getString(8));			
+				}
+			}			
+		}
+		catch(Exception ex) {
+			System.out.println(ex.toString());
+		}
+	}
+	/**
+	 * Create the frame.
+	 */
+	public ViewNV() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				Admin ad = new Admin();
+	            ad.setVisible(true);	
+			}
+			@Override
+			public void windowClosing(WindowEvent e) {
+				
+				 if (JOptionPane.showConfirmDialog(rootPane, 
+				            "Are you sure you want to close this window?", "Close Window?", 
+				            JOptionPane.YES_NO_OPTION,
+				            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+					 		System.exit(0);
+				            }
+			}
+		});
+		
+		setTitle("Staff Information");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 570, 597);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		txtTenNV = new JTextField();
+		txtTenNV.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtTenNV.setBounds(178, 43, 310, 28);
+		contentPane.add(txtTenNV);
+		txtTenNV.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("T\u00EAn Nh\u00E2n Vi\u00EAn");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setBounds(55, 46, 101, 19);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblPhngBan = new JLabel("Ph\u00F2ng Ban");
+		lblPhngBan.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPhngBan.setBounds(55, 96, 101, 19);
+		contentPane.add(lblPhngBan);
+		
+		JLabel lblDnang = new JLabel("D\u1EF1 \u00C1n \u0110ang L\u00E0m");
+		lblDnang.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblDnang.setBounds(55, 149, 113, 19);
+		contentPane.add(lblDnang);
+		
+		JLabel lblLngCBn = new JLabel("L\u01B0\u01A1ng C\u01A1 B\u1EA3n");
+		lblLngCBn.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblLngCBn.setBounds(55, 204, 101, 19);
+		contentPane.add(lblLngCBn);
+		
+		JLabel lblThng = new JLabel("Th\u01B0\u1EDFng");
+		lblThng.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblThng.setBounds(55, 307, 101, 19);
+		contentPane.add(lblThng);
+		
+		JLabel lblPht = new JLabel("Ph\u1EA1t");
+		lblPht.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPht.setBounds(55, 361, 101, 19);
+		contentPane.add(lblPht);
+		
+		JLabel lblSNgyLm = new JLabel("S\u1ED1 Ng\u00E0y L\u00E0m");
+		lblSNgyLm.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblSNgyLm.setBounds(55, 259, 101, 19);
+		contentPane.add(lblSNgyLm);
+		
+		JLabel lblTngLng = new JLabel("T\u1ED5ng L\u01B0\u01A1ng");
+		lblTngLng.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblTngLng.setBounds(55, 411, 101, 19);
+		contentPane.add(lblTngLng);
+		
+		txtPB = new JTextField();
+		txtPB.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtPB.setColumns(10);
+		txtPB.setBounds(178, 87, 310, 28);
+		contentPane.add(txtPB);
+		
+		txtDA = new JTextField();
+		txtDA.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtDA.setColumns(10);
+		txtDA.setBounds(178, 140, 310, 28);
+		contentPane.add(txtDA);
+		
+		txtLCB = new JTextField();
+		txtLCB.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtLCB.setColumns(10);
+		txtLCB.setBounds(178, 195, 310, 28);
+		contentPane.add(txtLCB);
+		
+		txtSNL = new JTextField();
+		txtSNL.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtSNL.setColumns(10);
+		txtSNL.setBounds(178, 250, 310, 28);
+		contentPane.add(txtSNL);
+		
+		txtT = new JTextField();
+		txtT.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtT.setColumns(10);
+		txtT.setBounds(178, 303, 310, 28);
+		contentPane.add(txtT);
+		
+		txtP = new JTextField();
+		txtP.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtP.setColumns(10);
+		txtP.setBounds(178, 357, 310, 28);
+		contentPane.add(txtP);
+		
+		txtTL = new JTextField();
+		txtTL.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtTL.setColumns(10);
+		txtTL.setBounds(178, 407, 310, 28);
+		contentPane.add(txtTL);
+		
+		
+	}
+	
+}

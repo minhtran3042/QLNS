@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\Users\Admin\Desktop\PPPTPMHDT-QLNS-07CNTT03\.metadata\.plugins\org.eclipse.jdt.core
+3707920382.index
+2196199803.index
+1616174514.index

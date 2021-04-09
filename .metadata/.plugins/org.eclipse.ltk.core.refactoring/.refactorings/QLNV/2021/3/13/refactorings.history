@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;QLLUONG&apos; to &apos;SALARY&apos;&#x0D;&#x0A;- Original project: &apos;QLNV&apos;&#x0D;&#x0A;- Original element: &apos;QLLUONG&apos;&#x0D;&#x0A;- Renamed element: &apos;SALARY&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;QLLUONG&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;{QLLUONG.java[QLLUONG" matchStrategy="1" name="SALARY" qualified="false" references="true" similarDeclarations="false" stamp="1616657184498" textual="false" version="1.0"/>
+</session>
